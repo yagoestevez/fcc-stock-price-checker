@@ -13,17 +13,10 @@ router.get( ROOT, ( req,res ) => {
 } );
 
 router.get( API, async ( req,res ) => {
-  if ( Array.isArray( req.query.stock ) ) {
-    if ( req.query.stock.length === 2 ) {
-      const result = await stocks.getTwoStocks( req );
-      res.send( result );
-    }
-  } else if ( req.query.stock ) {
-    const result = await stocks.getOneStock( req );
-    res.send( result );
-  } else {
-    res.status( 400 ).send( 'Error: A stock symbol must be provided: e.g. /api/stock-prices?stock=goog' );
-  }
+  if ( req.query.stock )
+    res.send( await stocks.getStocks( req ) );
+  else
+    res.status( 400 ).send( 'Error: A stock must be provided (e.g. /api/stock-prices?stock=goog)' );
 } );
 
 module.exports = router;

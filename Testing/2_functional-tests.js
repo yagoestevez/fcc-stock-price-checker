@@ -1,50 +1,120 @@
-/*
-*
-*
-*       FILL IN EACH FUNCTIONAL TEST BELOW COMPLETELY
-*       -----[Keep the tests in the same order!]-----
-*       (if additional are added, keep them at the very end!)
-*/
+const chaiHttp  = require( 'chai-http' );
+const chai      = require( 'chai' );
+const expect    = chai.expect;
+const server    = require( '../Main' );
 
-var chaiHttp = require('chai-http');
-var chai = require('chai');
-var assert = chai.assert;
-var server = require('../server');
+chai.use( chaiHttp );
 
-chai.use(chaiHttp);
+const ENDPOINT = '/api/stock-prices';
 
-suite('Functional Tests', function() {
+suite( 'Functional Tests', ( ) => {
     
-    suite('GET /api/stock-prices => stockData object', function() {
+    suite( 'GET /api/stock-prices => stockData object', ( ) => {
       
-      test('1 stock', function(done) {
-       chai.request(server)
-        .get('/api/stock-prices')
-        .query({stock: 'goog'})
-        .end(function(err, res){
-          
-          //complete this one too
-          
-          done();
-        });
-      });
-      
-      test('1 stock with like', function(done) {
-        
-      });
-      
-      test('1 stock with like again (ensure likes arent double counted)', function(done) {
-        
-      });
-      
-      test('2 stocks', function(done) {
-        
-      });
-      
-      test('2 stocks with like', function(done) {
-        
-      });
-      
+      let numLikes = 0;
+ 
+      test( '1 stock', done => {
+       chai.request( server )
+        .get( '/api/stock-prices' )
+        .query( { stock: 'goog' } )
+        .end( ( err, res ) => {
+          expect( res.status ).to.equal( 200 );
+          expect( res.body.stockData.stock, 'response stockData.stock should match "GOOG"' )
+                  .to.equal( 'GOOG' );
+          expect( res.body.stockData.price, 'response stockData.price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
+                  .is.a( 'number' );
+          numLikes = res.body.stockData.likes;
+          done( );
+        } );
+      } );
+
+      test( '1 stock with like', done => {
+       chai.request( server )
+        .get( '/api/stock-prices' )
+        .query( { stock: 'goog', like: true } )
+        .end( ( err, res ) => {
+          expect( res.status ).to.equal( 200 );
+          expect( res.body.stockData.stock, 'response stockData.stock should match "GOOG"' )
+                  .to.equal( 'GOOG' );
+          expect( res.body.stockData.price, 'response stockData.price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData.likes, 'response stockData.likes should be incremented by one' )
+                  .to.equal( numLikes + 1 );
+          done( );
+        } );
+      } );
+
+      test( '1 stock with like again (ensure likes arent double counted)', done => {
+        chai.request( server )
+        .get( '/api/stock-prices' )
+        .query( { stock: 'goog', like: true } )
+        .end( ( err, res ) => {
+          expect( res.status ).to.equal( 200 );
+          expect( res.body.stockData.stock, 'response stockData.stock should match "GOOG"' )
+                  .to.equal( 'GOOG' );
+          expect( res.body.stockData.price, 'response stockData.price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData.likes, 'response stockData.likes should NOT be incremented' )
+                  .to.equal( numLikes + 1 );
+          done( );
+        } );
+      } );
+
+      test( '2 stocks', done => {
+        chai.request( server )
+        .get( '/api/stock-prices' )
+        .query( { stock: [ 'AAPL', 'MSFT' ] } )
+        .end( ( err, res ) => {
+          expect( res.status ).to.equal( 200 );
+          expect( res.body.stockData[0].stock, 'response stockData[0].stock should match "AAPL"' )
+                  .to.equal( 'AAPL' );
+          expect( res.body.stockData[0].price, 'response stockData[0].price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[0].rel_likes, 'response stockData[0].rel_likes should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[1].stock, 'response stockData[1].stock should match "MSFT"' )
+                  .to.equal( 'MSFT' );
+          expect( res.body.stockData[1].price, 'response stockData[1].price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[1].rel_likes, 'response stockData[1].rel_likes should be a number' )
+                  .is.a( 'number' );
+          numLikes = [ res.body.stockData[0].rel_likes, res.body.stockData[1].rel_likes ];
+          done( );
+        } );
+      } );
+
+      test( '2 stocks with like', done => {
+        chai.request( server )
+        .get( '/api/stock-prices' )
+        .query( { stock: [ 'AAPL', 'MSFT' ], like: true } )
+        .end( ( err, res ) => {
+          expect( res.status ).to.equal( 200 );
+          expect( res.body.stockData[0].stock, 'response stockData[0].stock should match "AAPL"' )
+                  .to.equal( 'AAPL' );
+          expect( res.body.stockData[0].price, 'response stockData[0].price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[0].rel_likes, 'response stockData[0].rel_likes should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[1].stock, 'response stockData[1].stock should match "MSFT"' )
+                  .to.equal( 'MSFT' );
+          expect( res.body.stockData[1].price, 'response stockData[1].price should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[1].rel_likes, 'response stockData[1].rel_likes should be a number' )
+                  .is.a( 'number' );
+          expect( res.body.stockData[0].rel_likes, 'response stockData[0].rel_likes should be the difference' )
+                  .to.equal( numLikes[0] - numLikes[1] );
+          expect( res.body.stockData[1].rel_likes, 'response stockData[1].rel_likes should be the difference' )
+                  .to.equal( numLikes[1] - numLikes[0] );
+          done( );
+        } );
+      } );
+
     });
 
 });
