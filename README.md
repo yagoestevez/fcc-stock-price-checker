@@ -14,9 +14,9 @@ To test the app, just run ```npm test``` (after ```npm i```, of course).
 
 ##### Attribution
 
- Data provided for free by [IEX](https://iextrading.com/developer). [View IEX’s Terms of Use](https://iextrading.com/api-exhibit-a/).
+Data provided for free by [IEX](https://iextrading.com/developer). [View IEX’s Terms of Use](https://iextrading.com/api-exhibit-a/).
 
- Best API I tried, by the way!
+Best API I tried, by the way!
 
 ##### User Stories
 
