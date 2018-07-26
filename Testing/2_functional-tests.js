@@ -7,9 +7,11 @@ chai.use( chaiHttp );
 
 const ENDPOINT = '/api/stock-prices';
 
-suite( 'Functional Tests', ( ) => {
+suite( 'Functional Tests', function ( ) {
     
-    suite( 'GET /api/stock-prices => stockData object', ( ) => {
+    suite( 'GET /api/stock-prices => stockData object', function ( ) {
+
+      this.timeout(4000);
       
       let numLikes = 0;
  
@@ -25,8 +27,10 @@ suite( 'Functional Tests', ( ) => {
                   .is.a( 'number' );
           expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
                   .is.a( 'number' );
-          numLikes = res.body.stockData.likes;
-          done( );
+          setTimeout( ( ) => {
+            numLikes = res.body.stockData.likes;
+            done( );
+          }, 300 );
         } );
       } );
 
@@ -43,8 +47,8 @@ suite( 'Functional Tests', ( ) => {
           expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
                   .is.a( 'number' );
           expect( res.body.stockData.likes, 'response stockData.likes should be incremented by one' )
-                  .to.equal( numLikes + 1 );
-          done( );
+                  .to.equal( numLikes );
+          setTimeout( done, 300 );
         } );
       } );
 
@@ -61,8 +65,8 @@ suite( 'Functional Tests', ( ) => {
           expect( res.body.stockData.likes, 'response stockData.likes should be a number' )
                   .is.a( 'number' );
           expect( res.body.stockData.likes, 'response stockData.likes should NOT be incremented' )
-                  .to.equal( numLikes + 1 );
-          done( );
+                  .to.equal( numLikes );
+          setTimeout( done, 300 );
         } );
       } );
 
@@ -85,7 +89,7 @@ suite( 'Functional Tests', ( ) => {
           expect( res.body.stockData[1].rel_likes, 'response stockData[1].rel_likes should be a number' )
                   .is.a( 'number' );
           numLikes = [ res.body.stockData[0].rel_likes, res.body.stockData[1].rel_likes ];
-          done( );
+          setTimeout( done, 300 );
         } );
       } );
 
@@ -111,7 +115,7 @@ suite( 'Functional Tests', ( ) => {
                   .to.equal( numLikes[0] - numLikes[1] );
           expect( res.body.stockData[1].rel_likes, 'response stockData[1].rel_likes should be the difference' )
                   .to.equal( numLikes[1] - numLikes[0] );
-          done( );
+          setTimeout( done, 300 );
         } );
       } );
 

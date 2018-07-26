@@ -38,7 +38,7 @@ module.exports = class StockController {
       };
     }
 
-    // If only symbol was passed.
+    // If only one symbol was passed.
     const stock = await this.getOneStock( symbol, like, ip );
     if ( stock.ERROR )  return stock.ERROR
     return { 'stockData' : { stock: stock.symbol, price: stock.price, likes: stock.likes } };

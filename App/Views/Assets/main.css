@@ -12,10 +12,6 @@ html, body {
 }
 
 body {
-  display           : flex;
-  flex-direction    : column;
-  justify-content   : center;
-  align-items       : center; 
   font-family       : 'Markazi Text', serif !important;
   font-size         : 1.4rem !important;
   padding           : 2rem;

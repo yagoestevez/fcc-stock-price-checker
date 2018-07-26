@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 3000;
 app.set( 'view engine', 'pug' );
 app.set( 'views', './App/Views' );
 app.use( '/assets', express.static( 'App/Views/Assets' ) );
+
 app.use( cors( { origin: '*' } ) ); //For FCC testing purposes only
+app.enable('trust proxy');
+
 app.use( express.urlencoded( { extended: true } ) );
 app.use( helmet( {
   noCache       : true,
@@ -42,9 +45,9 @@ app.listen( PORT, ( ) => {
   const GREEN_BG = '\x1b[42m\x1b[30m';
   const RED_TEXT = '\x1b[31m';
   const RESET    = '\x1b[0m'; 
-  console.log( `${GREEN_BG}%s${RESET}`, ` :: Listening on port ${PORT} :: ` );
+  console.log( `${GREEN_BG}%s${RESET}`, ` -> Server open :: http://localhost:${PORT}/ <- ` );
   if ( process.env.NODE_ENV === 'test' ) {
-    console.log( `${RED_TEXT}%s${RESET}`, `------> Running Tests ------->` );
+    console.log( `${RED_TEXT}%s${RESET}`, `##### Running Tests #####` );
     setTimeout( ( ) => {
       try            { runner.run( ); }
       catch( error ) { console.log( `Tests are not valid:\n ${error}` ); }
